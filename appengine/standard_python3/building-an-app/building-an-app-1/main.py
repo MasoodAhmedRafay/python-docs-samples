@@ -14,7 +14,7 @@
 
 # [START gae_python38_render_template]
 # [START gae_python3_render_template]
-import datetime
+#import datetime
 
 from flask import Flask, render_template
 
@@ -22,9 +22,34 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    name = os.environ.get("NAME", "World")
-    return "Hello Plant Seeds {}!".format(name)
+DEFAULT_STUDENTS = (
+    'Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Fred',
+    'Ginny', 'Harriet', 'Ileana', 'Joseph', 'Kincaid', 'Larry',
+)
+PLANTS = {
+    'C': 'Clover',
+    'G': 'Grass',
+    'R': 'Radishes',
+    'V': 'Violets',
+}
+
+
+class Garden(object):
+    def __init__(self, diagram, students=DEFAULT_STUDENTS):
+        self.lines = diagram.splitlines()
+        self.students = sorted(students)
+
+    def plants(self, student):
+        index = self.students.index(student) * 2
+        return [PLANTS[p[i]] for p in self.lines for i in (index, index + 1)]
+
+
+garden = Garden("VCRRGVRG\nRVGCCGCV")
+print(garden.students)
+print(garden.lines)
+print(garden.plants("Alice"))
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
